@@ -11,12 +11,19 @@ api_platform:
 
     collection:
         pagination:
-            # To enable or disable pagination for all resource collections by default.
-            enabled: true
+            enabled: false
+            items_per_page: 20
+            client_enabled: true
 
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
+
     patch_formats:
         json: ['application/merge-patch+json']
+
     swagger:
+        api_keys:
+            JwtToken:
+                name: Authorization
+                type: header
         versions: [3]
