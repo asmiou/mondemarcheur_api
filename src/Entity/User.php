@@ -336,6 +336,11 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getLogin(): ?string
+    {
+        return $this->login;
+    }
+
     public function setLogin(?string $login): self
     {
         $this->login = $login;
