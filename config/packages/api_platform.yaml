@@ -1,0 +1,22 @@
+api_platform:
+    # The title of the API.
+    title: 'API Mon Démarcheur'
+
+    # The description of the API.
+    description: "Dans cette interface vous avez toute la documentation de l'api,
+    les entités exposées et les différentes méthodes http possible pour chaque entité."
+
+    # The version of the API.
+    version: '1.0.0'
+
+    collection:
+        pagination:
+            # To enable or disable pagination for all resource collections by default.
+            enabled: true
+
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        versions: [3]
