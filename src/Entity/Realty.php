@@ -2,15 +2,43 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use App\Repository\RealtyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RealtyRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *      attributes={
+ *          "pagination_enabled"=true,
+ *          "items_per_page"=30,
+ *      },
+ *     normalizationContext={"groups"={"realtyRead"}}
+ *
+ * )
+ * @ApiFilter(
+ *     SearchFilter::class,
+ *     properties={
+ *          "reference":"exact",
+ *          "name":"start",
+ *          "description":"partial"
+ *      }
+ * )
+ * @ApiFilter(
+ *     DateFilter::class,
+ *     properties={"createdAt"}
+ * )
+ * @ApiFilter(
+ *     BooleanFilter::class,
+ *     properties={"isAvailable"}
+ * )
  */
 class Realty
 {
@@ -23,46 +51,55 @@ class Realty
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"realtyRead","userRead"})
      */
     private $reference;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"realtyRead","userRead"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"realtyRead"})
      */
     private $floor;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"realtyRead","userRead"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"realtyRead","userRead"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"realtyRead","userRead"})
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"realtyRead","userRead"})
      */
     private $surface;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"realtyRead","userRead"})
      */
     private $isAvailable;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"realtyRead"})
      */
     private $createdAt;
 
@@ -73,6 +110,7 @@ class Realty
 
     /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="realty")
+     * @Groups({"realtyRead"})
      */
     private $property;
 

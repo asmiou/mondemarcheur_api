@@ -12,7 +12,7 @@ api_platform:
     collection:
         pagination:
             enabled: false
-            items_per_page: 20
+            items_per_page: 30
             client_enabled: true
 
     mapping:

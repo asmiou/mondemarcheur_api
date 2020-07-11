@@ -2,16 +2,36 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"userRead"}},
+ *     collectionOperations={"post"},
+ *     itemOperations={"get","put"}
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={"firstName":"start","lastName":"start", "login":"exact","email":"exact"}
+ * )
+ * @ApiFilter(DateFilter::class, properties={"createdAt","birthday"})
+ * @ApiFilter(
+ *     BooleanFilter::class,
+ *     properties={
+ *          "isEnabled"
+ *      }
+ * )
  */
 class User implements UserInterface
 {
@@ -19,16 +39,19 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"userRead"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"userRead","realtyRead"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"userRead"})
      */
     private $roles = [];
 
@@ -40,31 +63,37 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"userRead","realtyRead"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"userRead","realtyRead"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=1)
+     * @Groups({"userRead"})
      */
     private $gender;
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Groups({"userRead","realtyRead"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"userRead"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"userRead"})
      */
     private $createAt;
 
@@ -75,46 +104,55 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"userRead"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"userRead","realtyRead"})
      */
     private $country;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"userRead"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups({"userRead"})
      */
     private $zip;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"userRead"})
      */
     private $login;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"userRead"})
      */
     private $isEnabled;
 
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="customer")
+     * @Groups({"userRead"})
      */
     private $reservation;
 
     /**
      * @ORM\OneToMany(targetEntity=Statut::class, mappedBy="user")
+     * @Groups({"userRead"})
      */
     private $actionDone;
 
     /**
      * @ORM\OneToOne(targetEntity=Company::class, mappedBy="owner", cascade={"persist", "remove"})
+     * @Groups({"realtyRead"})
      */
     private $company;
 

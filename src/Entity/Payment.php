@@ -8,7 +8,13 @@ use ApiPlatform\core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *     attributes={
+ *          "pagination_enabled"=true,
+ *          "items_per_page"=30,
+ *          "order": {"amount": "desc"}
+ *     }
+ * )
  */
 class Payment
 {

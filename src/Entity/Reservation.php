@@ -10,7 +10,15 @@ use ApiPlatform\core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *     attributes={
+ *          "pagination_enabled"=true,
+ *          "items_per_page"=30,
+ *          "order": {"amount": "desc"}
+ *     },
+ *     collectionOperations={"post"},
+ *     itemOperations={"get"}
+ * )
  */
 class Reservation
 {
@@ -75,6 +83,15 @@ class Reservation
      * @ORM\OneToMany(targetEntity=Statut::class, mappedBy="reservation")
      */
     private $status;
+
+    /**
+     * @return float
+     */
+    public function amount():float {
+        return array_reduce($this->realty->toArray(), function(float $total, Realty $realty){
+           return $total+$realty->getPrice();
+        });
+    }
 
     public function __construct()
     {
