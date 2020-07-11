@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
@@ -23,11 +24,21 @@ class Company
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le nom de l'entreprise est obligatoire"
+     * )
+     * @Assert\Length(
+     *     min="3",
+     *     minMessage="Le nom de l'entreprise est trop court, il doit faire au minimum 3 caractères"
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="L'activité de l'entreprise doit être renseigner"
+     * )
      */
     private $activity;
 
@@ -38,11 +49,17 @@ class Company
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Assert\NotBlank(
+     *     message="Le numéro de téléphone est obligatoire"
+     * )
      */
     private $phone;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(
+     *     message="L'email '{{ value }}' est invalide."
+     * )
      */
     private $email;
 
@@ -53,21 +70,33 @@ class Company
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(
+     *     message="La date d'agréement de l'entreprise est obligatoire"
+     * )
      */
     private $approvedAt;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="L'adresse de l'entreprise est obligatoire"
+     * )
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le pays d'enregistrement de l'entreprise est obligatoire"
+     * )
      */
     private $country;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="La ville de l'entreprise est obligatoire"
+     * )
      */
     private $city;
 
@@ -99,6 +128,10 @@ class Company
     public function __construct()
     {
         $this->property = new ArrayCollection();
+        $this->$this->isEnabled = false;
+        $this->isProfessional = false;
+        $this->createdAt = new \DateTime();
+
     }
 
     public function getId(): ?int

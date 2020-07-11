@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CurrencyRepository::class)
@@ -23,11 +24,21 @@ class Currency
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le titre de la devise est obligatoire"
+     * )
      */
     private $label;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Assert\NotBlank(
+     *     message="Le code iso de la devise est obligatoire"
+     * )
+     * @Assert\Length(
+     *     min=3,
+     *     minMessage="Le code iso de la devise doit avoir au minimum 3 caractères"
+     * )
      */
     private $iso;
 
