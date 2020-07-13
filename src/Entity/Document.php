@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=DocumentRepository::class)
@@ -20,11 +21,6 @@ class Document
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30)
-     */
-    private $type;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $fileName;
@@ -33,11 +29,6 @@ class Document
      * @ORM\Column(type="string", length=255)
      */
     private $url;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $description;
 
     /**
      * @ORM\Column(type="datetime")
@@ -59,21 +50,14 @@ class Document
      */
     private $property;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=TypeDocument::class)
+     */
+    private $category;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
     }
 
     public function getFileName(): ?string
@@ -96,18 +80,6 @@ class Document
     public function setUrl(string $url): self
     {
         $this->url = $url;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }
@@ -156,6 +128,24 @@ class Document
     public function setProperty(?Property $property): self
     {
         $this->property = $property;
+
+        return $this;
+    }
+
+    public function __construct(){
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+        $this->isApproved = false;
+    }
+
+    public function getCategory(): ?TypeDocument
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?TypeDocument $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

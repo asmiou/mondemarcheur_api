@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PieceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PieceRepository::class)
@@ -12,6 +13,11 @@ use ApiPlatform\core\Annotation\ApiResource;
  */
 class Piece
 {
+    public function __construct(){
+        $this->quantity=1;
+        $this->area=10;
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -21,11 +27,25 @@ class Piece
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank(
+     *     message="La surface est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value=10,
+     *     message="La surface minimale acceptée est de 10 m²"
+     * )
      */
     private $area;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(
+     *     message="La quantité est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value=0,
+     *     message="La quantité ne peut pas être nulle"
+     * )
      */
     private $quantity;
 

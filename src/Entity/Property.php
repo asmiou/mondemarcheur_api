@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
@@ -23,6 +24,9 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le titre est obligatoire"
+     * )
      */
     private $title;
 
@@ -33,6 +37,13 @@ class Property
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     *     message="La description est obligaire"
+     * )
+     * @Assert\Length(
+     *     min="100",
+     *     minMessage="La description est rop courte, elle doit faire au minmum 100 caractères"
+     * )
      */
     private $description;
 
@@ -43,6 +54,9 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="La ville est obligatoire"
+     * )
      */
     private $city;
 
@@ -83,6 +97,9 @@ class Property
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(
+     *     message="La date de construction est obligatoire"
+     * )
      */
     private $buildAt;
 
@@ -131,6 +148,11 @@ class Property
         $this->services = new ArrayCollection();
         $this->realty = new ArrayCollection();
         $this->document = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->isEnabled = false;
+        $this->isApproved = false;
+        $this->isSponsored = false;
+
     }
 
     public function getId(): ?int

@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -46,48 +47,81 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"userRead","realtyRead"})
+     * @Assert\Email(
+     *     message="L'email '{{ value }}' est invalide."
+     * )
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
      * @Groups({"userRead"})
+     * @Assert\NotBlank(
+     *     message="Le role est obligatoire"
+     * )
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(
+     *     message="Le mot de passe est obligatoire"
+     * )
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"userRead","realtyRead"})
+     * @Assert\NotBlank(
+     *     message="Le nom est obligatoire"
+     * )
+     * @Assert\Length(
+     *     min="3",
+     *     minMessage="Le nom de est trop court, il doit faire au minimum 3 caractères"
+     * )
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"userRead","realtyRead"})
+     * @Assert\NotBlank(
+     *     message="Le prénom est obligatoire"
+     * )
+     * @Assert\Length(
+     *     min="3",
+     *     minMessage="Le prénom de est trop court, il doit faire au minimum 3 caractères"
+     * )
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=1)
      * @Groups({"userRead"})
+     * @Assert\NotBlank(
+     *     message="Le genre est obligatoire, soit F ou M"
+     * )
      */
     private $gender;
 
     /**
      * @ORM\Column(type="string", length=60)
      * @Groups({"userRead","realtyRead"})
+     * @Assert\NotBlank(
+     *     message="Le numero de téléphone est obligatoire"
+     * )
      */
     private $phone;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"userRead"})
+     * @Assert\LessThan(
+     *     value="-18 years",
+     *     message="Vous devez avoir au moins 18 ans"
+     * )
      */
     private $birthday;
 
@@ -117,6 +151,9 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"userRead"})
+     * @Assert\NotBlank(
+     *     message="La ville est obligatoire"
+     * )
      */
     private $city;
 
@@ -129,6 +166,9 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"userRead"})
+     * @Assert\NotBlank(
+     *     message="Le login est obligatoire"
+     * )
      */
     private $login;
 
@@ -145,7 +185,7 @@ class User implements UserInterface
     private $reservation;
 
     /**
-     * @ORM\OneToMany(targetEntity=Statut::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Status::class, mappedBy="user")
      * @Groups({"userRead"})
      */
     private $actionDone;
@@ -162,6 +202,8 @@ class User implements UserInterface
         $this->setUpdatedAt(new \DateTime());
         $this->reservation = new ArrayCollection();
         $this->actionDone = new ArrayCollection();
+        $this->createAt = new \DateTime();
+        $this->isEnabled = false;
     }
 
     public function getId(): ?int
@@ -430,14 +472,14 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Statut[]
+     * @return Collection|Status[]
      */
     public function getActionDone(): Collection
     {
         return $this->actionDone;
     }
 
-    public function addActionDone(Statut $actionDone): self
+    public function addActionDone(Status $actionDone): self
     {
         if (!$this->actionDone->contains($actionDone)) {
             $this->actionDone[] = $actionDone;
@@ -447,7 +489,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeActionDone(Statut $actionDone): self
+    public function removeActionDone(Status $actionDone): self
     {
         if ($this->actionDone->contains($actionDone)) {
             $this->actionDone->removeElement($actionDone);

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TypePieceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TypePieceRepository::class)
@@ -21,11 +22,21 @@ class TypePiece
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le titre est obligatoire"
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(
+     *     message="La description est obligatoire"
+     * )
+     * @Assert\Length(
+     *     min=60,
+     *     minMessage="La description est trop courte, elle doit faire au moins 60 caratères"
+     * )
      */
     private $description;
 

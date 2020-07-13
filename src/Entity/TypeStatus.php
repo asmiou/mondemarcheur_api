@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\TypeStatutRepository;
+use App\Repository\TypeStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=TypeStatutRepository::class)
+ * @ORM\Entity(repositoryClass=TypeStatusRepository::class)
  * @ApiResource
  */
-class TypeStatut
+class TypeStatus
 {
     /**
      * @ORM\Id()
@@ -21,11 +22,17 @@ class TypeStatut
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le titre est obligatoire"
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="La couleur est obligatoire, soit info, success, warning ou danger"
+     * )
      */
     private $labelColor;
 

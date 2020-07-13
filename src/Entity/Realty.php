@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=RealtyRepository::class)
@@ -58,6 +59,13 @@ class Realty
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"realtyRead","userRead"})
+     * @Assert\NotBlank(
+     *     message="Le nom est obligatoire"
+     * )
+     * @Assert\Length(
+     *     min=6,
+     *     minMessage="Le nom est trop court, il doit faire au moins 6 caractères."
+     * )
      */
     private $name;
 
@@ -70,24 +78,49 @@ class Realty
     /**
      * @ORM\Column(type="float")
      * @Groups({"realtyRead","userRead"})
+     * @Assert\NotBlank(
+     *     message="Le prix est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value=0,
+     *     message="Le prix ne peut pas être nulle"
+     * )
      */
     private $price;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"realtyRead","userRead"})
+     * @Assert\Length(
+     *     min="100",
+     *     minMessage="La description est rop courte, elle doit faire au minmum 100 caractères"
+     * )
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"realtyRead","userRead"})
+     * @Assert\NotBlank(
+     *     message="La quantité est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value=0,
+     *     message="La quantité ne peut pas être nulle"
+     * )
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="float")
      * @Groups({"realtyRead","userRead"})
+     * @Assert\NotBlank(
+     *     message="La surface est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value=10,
+     *     message="La surface minimale acceptée est de 10 m²"
+     * )
      */
     private $surface;
 
@@ -160,6 +193,9 @@ class Realty
         $this->piece = new ArrayCollection();
         $this->gallery = new ArrayCollection();
         $this->reservation = new ArrayCollection();
+        $this->createdAt=new \DateTime();
+        $this->isAvailable = false;
+        $this->quantity = 1;
     }
 
     public function getId(): ?int

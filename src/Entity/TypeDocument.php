@@ -2,16 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\TypePropertyRepository;
+use App\Repository\TypeDocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=TypePropertyRepository::class)
- * @ApiResource
+ * @ORM\Entity(repositoryClass=TypeDucumentRepository::class)
  */
-class TypeProperty
+class TypeDocument
 {
     /**
      * @ORM\Id()
@@ -30,6 +28,14 @@ class TypeProperty
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le type est obligatoire"
+     * )
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="text")
      * @Assert\NotBlank(
      *     message="La description est obligatoire"
      * )
@@ -53,6 +59,18 @@ class TypeProperty
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

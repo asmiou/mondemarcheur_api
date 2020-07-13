@@ -12,6 +12,11 @@ use ApiPlatform\core\Annotation\ApiResource;
  */
 class Media
 {
+    public function __construct(){
+        $this->createdAt=new \DateTime();
+        $this->type="image"; //video
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

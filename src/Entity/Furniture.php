@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\FurnitureRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FurnitureRepository::class)
@@ -21,10 +22,24 @@ class Furniture
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\GreaterThan(
+     *     value=0,
+     *     message="La quantité ne peut pas être nulle"
+     * )
+     * @Assert\Blank(
+     *     message="La quantité est obligatoire"
+     * )
      */
     private $quantity;
 
     /**
+     * @Assert\GreaterThan(
+     *     value=0,
+     *     message="Le prix ne peut pas être nulle"
+     * )
+     * @Assert\NotBlank(
+     *     message="Le prix est obligatoire"
+     * )
      * @ORM\Column(type="float")
      */
     private $price;
@@ -43,6 +58,12 @@ class Furniture
      * @ORM\ManyToOne(targetEntity=TypeFurniture::class)
      */
     private $type;
+
+    public function __construct(){
+        $this->quantity=1;
+        $this->isEnabled=false;
+    }
+
 
     public function getId(): ?int
     {

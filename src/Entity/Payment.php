@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PaymentRepository::class)
@@ -18,6 +19,10 @@ use ApiPlatform\core\Annotation\ApiResource;
  */
 class Payment
 {
+    public function __construct(){
+        $this->payedAt=new \DateTime();
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -37,6 +42,9 @@ class Payment
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le mode de paiement est obligatoire"
+     * )
      */
     private $mode;
 

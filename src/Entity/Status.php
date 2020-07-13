@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\StatutRepository;
+use App\Repository\StatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=StatutRepository::class)
+ * @ORM\Entity(repositoryClass=StatusRepository::class)
  * @ApiResource
  */
-class Statut
+class Status
 {
     /**
      * @ORM\Id()
@@ -26,6 +27,9 @@ class Statut
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le commentaire du status est obligatoire"
+     * )
      */
     private $comment;
 
@@ -40,7 +44,7 @@ class Statut
     private $reservation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=TypeStatut::class)
+     * @ORM\ManyToOne(targetEntity=TypeStatus::class)
      */
     private $type;
 
@@ -97,12 +101,12 @@ class Statut
         return $this;
     }
 
-    public function getType(): ?TypeStatut
+    public function getType(): ?TypeStatus
     {
         return $this->type;
     }
 
-    public function setType(?TypeStatut $type): self
+    public function setType(?TypeStatus $type): self
     {
         $this->type = $type;
 

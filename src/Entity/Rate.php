@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RateRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=RateRepository::class)
@@ -12,6 +13,10 @@ use ApiPlatform\core\Annotation\ApiResource;
  */
 class Rate
 {
+    public function __construct(){
+        $this->updatedAt=new \DateTime();
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -21,6 +26,12 @@ class Rate
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank(
+     *     message="La valeur du taux est obligatoire"
+     * )
+     * @Assert\Positive(
+     *     message="La valeur du taux ne peut pas être nulle"
+     * )
      */
     private $rateValue;
 

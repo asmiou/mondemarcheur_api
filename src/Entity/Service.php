@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ServiceRepository::class)
@@ -21,6 +22,9 @@ class Service
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message="Le titre est obligatoire"
+     * )
      */
     private $title;
 
@@ -31,8 +35,16 @@ class Service
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive(
+     *     message="Le prix ne doit pas être null"
+     * )
      */
     private $price;
+
+    public function __construct(){
+        $this->price = 0;
+    }
+
 
     public function getId(): ?int
     {

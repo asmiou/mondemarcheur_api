@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ReservationRepository::class)
@@ -36,26 +37,59 @@ class Reservation
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(
+     *     message="Le nombre de bébé est obligatoire"
+     * )
+     * @Assert\Positive(
+     *     message="Le nombre de bébé ne peut pas être nulle"
+     * )
      */
     private $baby;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(
+     *     message="Le nombre d'enfants est obligatoire"
+     * )
+     * @Assert\Positive(
+     *     message="Le nombre d'enfant ne peut pas être nulle"
+     * )
      */
     private $child;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(
+     *     message="Le nombre d'adulte est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value=0,
+     *     message="Le nombre d'adulte ne peut pas être nulle"
+     * )
      */
     private $adult;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(
+     *     message="La date d'arrivé est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value="+2 hours",
+     *     message="La date d'arrivée doit être au moins dans 2h"
+     * )
      */
     private $arrivedAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(
+     *     message="La date de départ est obligatoire"
+     * )
+     * @Assert\GreaterThan(
+     *     value="+3 hours",
+     *     message="La date de départ doit être au moins dans 3h"
+     * )
      */
     private $leavedAt;
 
@@ -80,7 +114,7 @@ class Reservation
     private $payments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Statut::class, mappedBy="reservation")
+     * @ORM\OneToMany(targetEntity=Status::class, mappedBy="reservation")
      */
     private $status;
 
@@ -97,6 +131,7 @@ class Reservation
     {
         $this->payments = new ArrayCollection();
         $this->status = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -244,30 +279,30 @@ class Reservation
     }
 
     /**
-     * @return Collection|Statut[]
+     * @return Collection|Status[]
      */
     public function getStatus(): Collection
     {
         return $this->status;
     }
 
-    public function addStatut(Statut $statut): self
+    public function addStatus(Status $status): self
     {
-        if (!$this->status->contains($statut)) {
-            $this->status[] = $statut;
-            $statut->setReservation($this);
+        if (!$this->status->contains($status)) {
+            $this->status[] = $status;
+            $status->setReservation($this);
         }
 
         return $this;
     }
 
-    public function removeStatut(Statut $statut): self
+    public function removeStatus(Status $status): self
     {
-        if ($this->status->contains($statut)) {
-            $this->status->removeElement($statut);
+        if ($this->status->contains($status)) {
+            $this->status->removeElement($status);
             // set the owning side to null (unless already changed)
-            if ($statut->getReservation() === $this) {
-                $statut->setReservation(null);
+            if ($status->getReservation() === $this) {
+                $status->setReservation(null);
             }
         }
 
