@@ -78,6 +78,10 @@ class Reservation
      *     value="+2 hours",
      *     message="La date d'arrivée doit être au moins dans 2h"
      * )
+     * @Assert\DateTime(
+     *     message="La date doit être au format YYYY-MM-DD H:i:s"
+     * )
+     * @var string A "YYYY-MM-DD H:i:s" formatted value
      */
     private $arrivedAt;
 
@@ -90,6 +94,10 @@ class Reservation
      *     value="+3 hours",
      *     message="La date de départ doit être au moins dans 3h"
      * )
+     * @Assert\DateTime(
+     *     message="La date doit être au format YYYY-MM-DD H:i:s"
+     * )
+     * @var string A "YYYY-MM-DD H:i:s" formatted value
      */
     private $leavedAt;
 
@@ -192,7 +200,7 @@ class Reservation
         return $this->arrivedAt;
     }
 
-    public function setArrivedAt(\DateTimeInterface $arrivedAt): self
+    public function setArrivedAt($arrivedAt): self
     {
         $this->arrivedAt = $arrivedAt;
 
@@ -204,7 +212,7 @@ class Reservation
         return $this->leavedAt;
     }
 
-    public function setLeavedAt(\DateTimeInterface $leavedAt): self
+    public function setLeavedAt($leavedAt): self
     {
         $this->leavedAt = $leavedAt;
 

@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
  *     normalizationContext={"groups"={"userRead"}},
- *     collectionOperations={"post"},
+ *     collectionOperations={"get","post"},
  *     itemOperations={"get","put"}
  * )
  * @ApiFilter(
@@ -122,6 +122,10 @@ class User implements UserInterface
      *     value="-18 years",
      *     message="Vous devez avoir au moins 18 ans"
      * )
+     * @Assert\DateTime(
+     *     message="La date doit être au format YYYY-MM-DD"
+     * )
+     * @var string A "YYYY-MM-DD" formatted value
      */
     private $birthday;
 
