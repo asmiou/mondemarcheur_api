@@ -30,5 +30,5 @@ services:
     App\Events\JwtTokenCustom:
         tags:
             - {name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: updateJwtData}
-    App\Path\DateTimeNormalize:
-        tags:[serializer.normalizer]
+    App\Path\DateTimeNormalizer:
+        tags: [serializer.normalizer]
